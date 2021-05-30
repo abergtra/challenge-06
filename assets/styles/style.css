@@ -6,3 +6,7 @@
   padding: 5px;
   background-image: linear-gradient(to right, blue , indigo);
 }
+
+.searchgrid {
+  padding: 0 0 10px 0;
+}
