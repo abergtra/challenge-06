@@ -1,0 +1,8 @@
+* {
+  margin: 10px;
+}
+
+.grad {
+  padding: 5px;
+  background-image: linear-gradient(to right, blue , indigo);
+}
