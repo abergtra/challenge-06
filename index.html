@@ -12,30 +12,31 @@
     <link rel="stylesheet" href="./assets/styles/style.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="grad text-white">
-            <h2 class="text-center">Weather Dashboard</h2>
-        </div>
-
-        <div class="col-md-4">
-            <div class="row">
-                <h3 class="text-left">Search for a City:</h3>
-                <input class="form-control btn-block" type="text" placeholder="San Diego">
-                <button type="button" id="search-button" class="btn btn-primary btn-block">Search</button>
-            </div>
-            <div class="divider bg-dark"><hr/></div>
-            <div id="city-list" class="row hide">
-                
-                    <a href="#" class="list-group-item btn-block" style="text-decoration: none; color: black; background-color: #b7b7b7; border: none;">
-                       SF
+    <div class="grad col text-white">
+        <h2 class="text-center">Weather Dashboard</h2>
+    </div>
+    <div class="container-fluid">     
+        <div class="row addpad">
+            <div class="col-md-4 ">
+                <div class="row">
+                    <h3 class="text-left">Search for a City:</h3>
+                    <input class="form-control btn-block" type="text" placeholder="San Diego">
+                    <button type="button" id="search-button" class="btn btn-primary btn-block">Search</button>
+                </div>
+                <div class="divider bg-dark"><hr/></div>
+                <div id="city-list" class="row hide">
+                    <a href="#" class="list-group-item btn-block" style="text-decoration: none; color: black; background-color: #b7b7b7; border: none; text-align: center;">
+                        SF
                     </a>
-                
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div id="current-weather" class="row addpad">sup</div>
+                <div id="forecast" class="row addpad">
+                    <div class="card-deck w-100"></div>
+                </div>
             </div>
         </div>
-
-        <div class="col-md-8">
-        </div>
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
