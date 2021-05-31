@@ -20,3 +20,21 @@ var forecasticonurl = "";
 //global variables
 var latitude = "";
 var longitude = "";
+var searchedCities = [];
+
+//Pull city search history from local storage
+var localStorageCities = JSON.parse(localStorage.getItem("city-search-history"));
+if (localStorageCities !== null) {
+    localStorageCities.forEach(function(city) {city.toUpperCase();});
+    searchedCities = localStorageCities;  
+}
+
+//Identify current searched city from array and run search function
+$(document).ready(function(){
+    displayCities(searchedCities);
+    if (localStorageCities !== null) {
+      var currentCity = searchedCities[0];
+      searchCity(currentCity);
+    }
+});
+
