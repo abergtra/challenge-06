@@ -13,3 +13,7 @@
 .addpad {
   padding: 5px;
 }
+
+.hide {
+  display: none;
+}
