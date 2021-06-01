@@ -101,7 +101,7 @@ function displayTodayWeather() {
     //Set card format
     var todayCard = $("<div class='container border border-dark bg-transparent'>");
     //define each line for card as a string
-    var todayHeader = $("<h4>").text(City + " " + todayDate.toString());
+    var todayHeader = $("<h2>").text(City + " (" + todayDate.toString() + ")");
     var weatherIcon = $("<img>").attr('src', todayIconUrl);
 
     var TemperatureToday = $("<p>").text("Temp: " + todayTemp + "ºF");
@@ -148,7 +148,37 @@ function showCityList(searchedCities) {
       $("#city-list").append(`<a href="#" class="list-group-item btn-block" style="text-decoration: none; color: black; background-color: #b7b7b7; border: none; text-align: center;">`
       + searchedCities[i] + `</a>`);
     }
-  }
+}
+
+//Function to add Header for Forecast
+function addForecastHeader() {
+    deckHeader = $("<h4>").text("5-Day Forecast:").attr("id", "card-deck-title");
+    $(".card-deck").before(deckHeader);
+}
+
+// function displayForecast() {
+//     //Set card format
+//     var todayCard = $("<div class='container border border-dark bg-transparent'>");
+//     //define each line for card as a string
+//     var todayHeader = $("<h4>").text(City + " (" + todayDate.toString() + ")");
+//     var weatherIcon = $("<img>").attr('src', todayIconUrl);
+
+//     var TemperatureToday = $("<p>").text("Temp: " + todayTemp + "ºF");
+//     var WindSpeedToday = $("<p>").text("Wind Speed: " + todayWind + " MPH");
+//     var HumidityToday = $("<p>").text("Humidity: " + todayHumidity + " %");
+//     var UVItoday = $("<p>").text("UV Index: ");
+//     var UVItodayBGformat = $("<span>").text(UVindex).css("background-color", UVIBackgroundColor(UVindex)).addClass("badge text-white"); 
+//     //order string elements in card
+//     todayHeader.append(weatherIcon);
+//     todayCard.append(todayHeader);
+//     todayCard.append(TemperatureToday);
+//     todayCard.append(WindSpeedToday);
+//     todayCard.append(HumidityToday);
+//     UVItoday.append(UVItodayBGformat);
+//     todayCard.append(UVItoday);
+//     //send card with ordered strings to HTML
+//     $("#current-weather").append(todayCard);
+// }
 
 //Function to search info for a city
 function searchCity(cityName){
@@ -205,7 +235,7 @@ function searchCity(cityName){
                 //All today's weather info is identified so call the display function
             displayTodayWeather();
             //Isolate forecast data from "daily" section of One Call API response
-            addCardDeckHeader();
+            addForecastHeader();
             for (var i=0; i < 5; i++) {
                 forecastDate = moment.unix(OneCallData.daily[i].dt).format('l');
                 var forecastTempKelvin = OneCallData.daily[i].temp.day;
@@ -214,7 +244,7 @@ function searchCity(cityName){
                 forecastHumidity = OneCallData.daily[i].humidity;
                 forecasticoncode = OneCallData.daily[i].weather[0].icon;
                 forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
-                displayDayForeCast()
+                displayForecast()
             } 
         });
     });
