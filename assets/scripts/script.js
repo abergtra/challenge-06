@@ -94,40 +94,53 @@ $(document).on("click", ".list-group-item", function() {
 
 //Function to search info for a city
 function searchCity(cityName){
-    console.log("searchCity: " , cityName);
-    // Define API url to locate info
+    //For Testing:
+        //console.log("searchCity: " , cityName);
+    //Define API url to locate info
     var APIurl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
 
-    // Perform an asynchornous HTTP (ajax) request to the OpenWeatherAPI
+    //Perform an asynchronous HTTP (ajax) request to the OpenWeatherAPI
     $.ajax({url: APIurl, method: "GET"})
 
-    // store all of the retrieved data inside of an object called "response"
+    //Take data from ajax request and store in "response" object
     .then(function(response) {
-        var result = response;
-        console.log(result);
-        city = result.name.trim();
-        //  var countryCode = result.sys.country;
-        //  country = getCountryName(countryCode).trim();
-        //  currentDate = moment().tz(country + "/" + city).format('l');
-        currentDate = moment.unix(result.dt).format("l");
-        console.log(currentDate);
-        var tempK = result.main.temp;
-        // Converts the temp to Kelvin with the below formula
-        tempF = ((tempK - 273.15) * 1.80 + 32).toFixed(1);
-        humidityValue = result.main.humidity;
-        windSpeed = result.wind.speed;
-        currentWeatherIconCode = result.weather[0].icon;
-        currentWeatherIconUrl = "https://openweathermap.org/img/w/" + currentWeatherIconCode + ".png";
-        var latitude = result.coord.lat;
-        var longitude = result.coord.lon;
-        var uvIndexQueryUrl = "https://api.openweathermap.org/data/2.5/uvi?&appid=" + APIKey + "&lat=" + latitude + "&lon=" + longitude;
+        var APIdata = response;
+        //For Testing:
+            //console.log(APIdata);
+        //Isolate data from API response using JSON
+            //Get City name
+            City = APIdata.name.trim();
+            //Get today's date using moment.js and convert to string format
+            todayDate = moment.unix(APIdata.dt).format("l");
+            //For Testing:    
+                //console.log(todayDate);
+            //Get temperature (in Kelvin)
+            var todayTempKelvin = APIdata.main.temp;
+            // Convert today's temperature from Kelvin to Fahrenheit (rounded to one decimal point)
+            todayTemp = ((todayTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
+            //Get humidity
+            todayHumidity = APIdata.main.humidity;
+            //Get Wind Speed
+            todayWind = APIdata.wind.speed;
+            //Get Weather Icon from API code and image url
+            todayIconCode = APIdata.weather.icon;
+            todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + ".png";
+            //Get Latitude & Longitude for UV Index 
+            latitude = APIdata.coord.lat;
+            longitude = APIdata.coord.lon;
+        //Define UV Index URL using lat and long
+        var UVindexURL = "https://api.openweathermap.org/data/2.5/uvi?&appid=" + APIKey + "&lat=" + latitude + "&lon=" + longitude;
+        //Perform an asynchronous HTTP (ajax) request for the UV Index
         $.ajax({
-            url: uvIndexQueryUrl,
+            url: UVindexURL,
             method: "GET"
         })
+        //Take data from UV Index ajax request and store in "response" object
         .then(function(response) {
+            //Get UV Index
             uvIndexValue = response.value;
-            displayCurrentWeather()
+            //All today's weather info is identified so call the display function
+            displayTodayWeather()
                 
             var fiveDayQueryUrl = "https://api.openweathermap.org/data/2.5/forecast/daily?q=" + city + "&appid=" + APIKey + "&cnt=5";
             $.ajax({
