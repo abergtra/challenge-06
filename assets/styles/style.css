@@ -8,7 +8,10 @@
   padding: 0 0 10px 0;
 }
 
-/* #33465b */
+.bg-forecast-cards {
+  background-color: #33465b;
+
+}
 
 .addpad {
   padding: 5px;

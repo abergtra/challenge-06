@@ -77,7 +77,7 @@ function clearDisplay () {
     //Clear active display
     $("#current-weather").empty();
     $("#card-deck-title").remove();
-    $(".card-deck").empty();
+    $("#forecast").empty();
     //Reset global variables
     City = "";
     todayDate = "";
@@ -153,32 +153,34 @@ function showCityList(searchedCities) {
 //Function to add Header for Forecast
 function addForecastHeader() {
     deckHeader = $("<h4>").text("5-Day Forecast:").attr("id", "card-deck-title");
-    $(".card-deck").before(deckHeader);
+    $("#forecast").before(deckHeader);
 }
 
-// function displayForecast() {
-//     //Set card format
-//     var todayCard = $("<div class='container border border-dark bg-transparent'>");
-//     //define each line for card as a string
-//     var todayHeader = $("<h4>").text(City + " (" + todayDate.toString() + ")");
-//     var weatherIcon = $("<img>").attr('src', todayIconUrl);
-
-//     var TemperatureToday = $("<p>").text("Temp: " + todayTemp + "ºF");
-//     var WindSpeedToday = $("<p>").text("Wind Speed: " + todayWind + " MPH");
-//     var HumidityToday = $("<p>").text("Humidity: " + todayHumidity + " %");
-//     var UVItoday = $("<p>").text("UV Index: ");
-//     var UVItodayBGformat = $("<span>").text(UVindex).css("background-color", UVIBackgroundColor(UVindex)).addClass("badge text-white"); 
-//     //order string elements in card
-//     todayHeader.append(weatherIcon);
-//     todayCard.append(todayHeader);
-//     todayCard.append(TemperatureToday);
-//     todayCard.append(WindSpeedToday);
-//     todayCard.append(HumidityToday);
-//     UVItoday.append(UVItodayBGformat);
-//     todayCard.append(UVItoday);
-//     //send card with ordered strings to HTML
-//     $("#current-weather").append(todayCard);
-// }
+function displayForecast() {
+    //Set forecast format
+    var forecastFormat = $("<div class='card pl-1 bg-forecast-cards text-light text-align-left'>");
+    //Set Div for card elements
+    var cardBlockDiv = $("<div>").attr("class", "card-block");
+    var cardTitleDiv = $("<div>").attr("class", "card-block");
+    var cardTextDiv = $("<div>").attr("class", "card-text");
+    //define each line as a string
+    var DayForecast = $("<h5>").text(forecastDate.toString());
+    var IconForecast = $("<img>").attr('src', forecasticonurl);
+    var TemperatureForecast = $("<p>").text("Temp: " + forecastTemp + " ºF");
+    var WindSpeedForecast = $("<p>").text("Wind: " + forecastWind + " MPH");
+    var HumidityForecast = $("<p>").text("Humidity: " + forecastHumidity + " %");
+    //order string elements in card
+    cardTitleDiv.append(DayForecast);
+    cardTextDiv.append(IconForecast);
+    cardTextDiv.append(TemperatureForecast);
+    cardTextDiv.append(WindSpeedForecast);
+    cardTextDiv.append(HumidityForecast);
+    cardBlockDiv.append(cardTitleDiv);
+    cardBlockDiv.append(cardTextDiv);
+    forecastFormat.append(cardBlockDiv);
+    //send forecast with ordered strings to HTML
+    $("#forecast").append(forecastFormat);
+}
 
 //Function to search info for a city
 function searchCity(cityName){
@@ -243,7 +245,7 @@ function searchCity(cityName){
                 forecastWind = OneCallData.daily[i].wind_speed;
                 forecastHumidity = OneCallData.daily[i].humidity;
                 forecasticoncode = OneCallData.daily[i].weather[0].icon;
-                forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
+                forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + ".png";
                 displayForecast()
             } 
         });
