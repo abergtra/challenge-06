@@ -103,22 +103,26 @@ function displayTodayWeather() {
     var todayHeader = $("<h4>").text(City + " " + todayDate.toString());
     var weatherIcon = $("<img>").attr('src', todayIconUrl);
 
-    var temperatureEl = $("<p>").text("Temp " + tempF+ " ºF");
-    var windSpeedEl = $("<p>").text("Wind Speed: " + windSpeed + " MPH");
-    var humidityEl = $("<p>").text("Humidity: " + humidityValue + "%");
-    var uvIndexEl = $("<p>").text("UV Index: ");
-    // var uvIndexValueEl = $("<span>").text(uvIndexValue).css("background-color", getColorCodeForUVIndex(uvIndexValue)).addClass("text-white");
-    var uvIndexValueEl = $("<span>").text(uvIndexValue).css("background-color", getColorCodeForUVIndex(uvIndexValue)); 
-    
+    var TemperatureToday = $("<p>").text("Temp " + todayTemp + "ºF");
+    var WindSpeedToday = $("<p>").text("Wind Speed: " + windSpeed + " MPH");
+    var HumidityToday = $("<p>").text("Humidity: " + humidityValue + " %");
+    var UVItoday = $("<p>").text("UV Index: ");
+    var UVItodayBGformat = $("<span>").text(UVindex).css("background-color", UVIBackgroundColor(UVindex)).addClass("text-white"); 
+    //order string elements in card
     todayHeader.append(weatherIcon);
-    uvIndexEl.append(uvIndexValueEl);
     todayCard.append(todayHeader);
-    todayCard.append(temperatureEl);
-    todayCard.append(humidityEl);
-    todayCard.append(windSpeedEl);
-    todayCard.append(uvIndexEl);
+    todayCard.append(TemperatureToday);
+    todayCard.append(WindSpeedToday);
+    todayCard.append(HumidityToday);
+    UVItoday.append(UVItodayBGformat);
+    todayCard.append(UVItoday);
+    //send card to HTML
     $("#current-weather").append(todayCard);
-  }
+}
+
+function UVIBackgroundColor(UVindex) {
+    
+}
 
 //Function to search info for a city
 function searchCity(cityName){
@@ -168,7 +172,7 @@ function searchCity(cityName){
                 //Get humidity
                 todayHumidity = OneCallData.current.humidity;
                 //Get UV Index
-                uvIndexValue = OneCallData.current.uvi;
+                UVindex = OneCallData.current.uvi;
                 //Get Weather Icon from API code and image url
                 todayIconCode = OneCallData.current.weather.icon;
                 todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + "@2x.png";
