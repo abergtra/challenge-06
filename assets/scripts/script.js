@@ -12,7 +12,9 @@ var todayHumidity = "";
 var UVindex = "";
 
 //global variables for forecast Cards
+var forecastDate = "";
 var forecastTemp = "";
+var forecastWind = "";
 var forecastHumidity = "";
 var forecasticoncode = "";
 var forecasticonurl = "";
@@ -144,45 +146,20 @@ function searchCity(cityName){
                 //Get Weather Icon from API code and image url
                 todayIconCode = OneCallData.current.weather.icon;
                 todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + "@2x.png";
+                //All today's weather info is identified so call the display function
+            displayTodayWeather();
             //Isolate forecast data from "daily" section of One Call API response
+            addCardDeckHeader();
+            for (var i=0; i < 5; i++) {
+                forecastDate = moment.unix(OneCallData.daily[i].dt).format('l');
+                var forecastTempKelvin = OneCallData.daily[i].temp.day;
+                forecastTemp =  ((forecastTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
+                forecastWind = OneCallData.daily[i].wind_speed;
+                forecastHumidity = OneCallData.daily[i].humidity;
+                forecasticoncode = OneCallData.daily[i].weather[0].icon;
+                forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
+                displayDayForeCast()
+            } 
         });
-            
-            
-        //Define UV Index URL using lat and long
-        var UVindexURL = "https://api.openweathermap.org/data/2.5/uvi?&appid=" + APIKey + "&lat=" + latitude + "&lon=" + longitude;
-        //Perform an asynchronous HTTP (ajax) request for the UV Index
-        $.ajax({
-            url: UVindexURL,
-            method: "GET"
-        })
-        //Take data from UV Index ajax request and store in "response" object
-        .then(function(response) {
-            //Get UV Index
-            uvIndexValue = response.value;
-            //All today's weather info is identified so call the display function
-            displayTodayWeather()
-            //Define URL for Forecast from API    
-            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
-            $.ajax({
-                url: forecastURL,
-                method: "GET"
-            })
-            .then(function(response) {
-                var fiveDayForecast = response.list;
-                addCardDeckHeader()
-                for (var i=0; i < 5; i++) {
-                    iconcode = fiveDayForecast[i].weather[0].icon;
-                    iconurl = "https://openweathermap.org/img/w/" + iconcode + ".png";
-                    //  dateValue = moment().tz(country + "/" + city).add(i, 'days').format('l');
-                    dateValue = moment.unix(fiveDayForecast[i].dt).format('l');
-                    minTempK = fiveDayForecast[i].temp.min;
-                    minTempF =  ((minTempK - 273.15) * 1.80 + 32).toFixed(1);
-                    maxTempK = fiveDayForecast[i].temp.max;
-                    maxTempF =  (((fiveDayForecast[i].temp.max) - 273.15) * 1.80 + 32).toFixed(1);
-                    dayhumidity = fiveDayForecast[i].humidity;
-                    displayDayForeCast()
-                } 
-            });      
-        }); 
     });
 }
