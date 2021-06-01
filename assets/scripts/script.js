@@ -110,6 +110,16 @@ function searchCity(cityName){
         //Isolate data from API response using JSON
             //Get City name
             City = APIdata.name.trim();
+            //Get Latitude & Longitude to switch to One Call API 
+            latitude = APIdata.coord.lat;
+            longitude = APIdata.coord.lon;
+        //Define One Call URL using lat and long
+        var OneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=minutely,hourly,alerts&appid=" + APIkey;
+        //Perform an asynchronous HTTP (ajax) request for the UV Index
+        $.ajax({
+            url: OneCallURL,
+            method: "GET"
+        })    
             //Get today's date using moment.js and convert to string format
             todayDate = moment.unix(APIdata.dt).format("l");
             //For Testing:    
@@ -125,9 +135,7 @@ function searchCity(cityName){
             //Get Weather Icon from API code and image url
             todayIconCode = APIdata.weather.icon;
             todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + ".png";
-            //Get Latitude & Longitude for UV Index 
-            latitude = APIdata.coord.lat;
-            longitude = APIdata.coord.lon;
+            
         //Define UV Index URL using lat and long
         var UVindexURL = "https://api.openweathermap.org/data/2.5/uvi?&appid=" + APIKey + "&lat=" + latitude + "&lon=" + longitude;
         //Perform an asynchronous HTTP (ajax) request for the UV Index
@@ -141,10 +149,10 @@ function searchCity(cityName){
             uvIndexValue = response.value;
             //All today's weather info is identified so call the display function
             displayTodayWeather()
-                
-            var fiveDayQueryUrl = "https://api.openweathermap.org/data/2.5/forecast/daily?q=" + city + "&appid=" + APIKey + "&cnt=5";
+            //Define URL for Forecast from API    
+            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
             $.ajax({
-                url: fiveDayQueryUrl,
+                url: forecastURL,
                 method: "GET"
             })
             .then(function(response) {
