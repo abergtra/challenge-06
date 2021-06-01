@@ -27,7 +27,7 @@ var searchedCities = [];
 //Pull city search history from local storage
 var localStorageCities = JSON.parse(localStorage.getItem("city-search-history"));
 if (localStorageCities !== null) {
-    localStorageCities.forEach(function(city) {city.toUpperCase();});
+    localStorageCities.forEach(function(City) {City.toUpperCase();});
     searchedCities = localStorageCities;  
 }
 
@@ -39,29 +39,6 @@ $(document).ready(function(){
       searchCity(currentCity);
     }
 });
-
-//function to Clear Active Display and global variables
-function clearDisplay () {
-    //Clear active display
-    $("#current-weather").empty();
-    $("#card-deck-title").remove();
-    $(".card-deck").empty();
-    //Reset global variables
-    City = "";
-    todayDate = "";
-    todayIconCode = "";
-    todayIconUrl = "";
-    todayTemp = "";
-    todayWind = "";
-    todayHumidity = "";
-    UVindex = "";
-    forecastTemp = "";
-    forecastHumidity = "";
-    forecasticoncode = "";
-    forecasticonurl = "";
-    latitude = "";
-    longitude = "";
-}
 
 //Function response to Search Button click
 $("#search-button").on("click", function() {
@@ -93,6 +70,55 @@ $(document).on("click", ".list-group-item", function() {
     clearDisplay();
     searchCity(cityName);
 });
+
+//function to Clear Active Display and global variables
+function clearDisplay () {
+    //Clear active display
+    $("#current-weather").empty();
+    $("#card-deck-title").remove();
+    $(".card-deck").empty();
+    //Reset global variables
+    City = "";
+    todayDate = "";
+    todayIconCode = "";
+    todayIconUrl = "";
+    todayTemp = "";
+    todayWind = "";
+    todayHumidity = "";
+    UVindex = "";
+    forecastDate = "";
+    forecastTemp = "";
+    forecastWind = "";
+    forecastHumidity = "";
+    forecasticoncode = "";
+    forecasticonurl = "";
+    latitude = "";
+    longitude = "";
+}
+
+function displayTodayWeather() {
+    //Set card format
+    var todayCard = $("<div class='container border border-dark bg-transparent'>");
+    //define each line for card as a string
+    var todayHeader = $("<h4>").text(City + " " + todayDate.toString());
+    var weatherIcon = $("<img>").attr('src', todayIconUrl);
+
+    var temperatureEl = $("<p>").text("Temp " + tempF+ " ºF");
+    var windSpeedEl = $("<p>").text("Wind Speed: " + windSpeed + " MPH");
+    var humidityEl = $("<p>").text("Humidity: " + humidityValue + "%");
+    var uvIndexEl = $("<p>").text("UV Index: ");
+    // var uvIndexValueEl = $("<span>").text(uvIndexValue).css("background-color", getColorCodeForUVIndex(uvIndexValue)).addClass("text-white");
+    var uvIndexValueEl = $("<span>").text(uvIndexValue).css("background-color", getColorCodeForUVIndex(uvIndexValue)); 
+    
+    todayHeader.append(weatherIcon);
+    uvIndexEl.append(uvIndexValueEl);
+    todayCard.append(todayHeader);
+    todayCard.append(temperatureEl);
+    todayCard.append(humidityEl);
+    todayCard.append(windSpeedEl);
+    todayCard.append(uvIndexEl);
+    $("#current-weather").append(todayCard);
+  }
 
 //Function to search info for a city
 function searchCity(cityName){
@@ -163,3 +189,4 @@ function searchCity(cityName){
         });
     });
 }
+
