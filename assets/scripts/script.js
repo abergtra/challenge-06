@@ -98,9 +98,11 @@ function searchCity(cityName){
         //console.log("searchCity: " , cityName);
     //Define API url to locate info
     var APIurl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
-
     //Perform an asynchronous HTTP (ajax) request to the OpenWeatherAPI
-    $.ajax({url: APIurl, method: "GET"})
+    $.ajax({
+        url: APIurl, 
+        method: "GET"
+    })
 
     //Take data from ajax request and store in "response" object
     .then(function(response) {
@@ -115,26 +117,36 @@ function searchCity(cityName){
             longitude = APIdata.coord.lon;
         //Define One Call URL using lat and long
         var OneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=minutely,hourly,alerts&appid=" + APIkey;
-        //Perform an asynchronous HTTP (ajax) request for the UV Index
+        //Perform an asynchronous HTTP (ajax) request for One Call API
         $.ajax({
             url: OneCallURL,
             method: "GET"
-        })    
-            //Get today's date using moment.js and convert to string format
-            todayDate = moment.unix(APIdata.dt).format("l");
-            //For Testing:    
-                //console.log(todayDate);
-            //Get temperature (in Kelvin)
-            var todayTempKelvin = APIdata.main.temp;
-            // Convert today's temperature from Kelvin to Fahrenheit (rounded to one decimal point)
-            todayTemp = ((todayTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
-            //Get humidity
-            todayHumidity = APIdata.main.humidity;
-            //Get Wind Speed
-            todayWind = APIdata.wind.speed;
-            //Get Weather Icon from API code and image url
-            todayIconCode = APIdata.weather.icon;
-            todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + ".png";
+        })  
+
+        //Take data from One Call ajax request and store in "response" object  
+        .then(function(response) {
+            var OneCallData = response;
+            //Isolate today's data from "current" section of One Call API response
+                //Get today's date using moment.js and convert to string format
+                todayDate = moment.unix(OneCallData.current.dt).format("l");
+                //For Testing:    
+                    //console.log(todayDate);
+                //Get temperature (in Kelvin)
+                var todayTempKelvin = OneCallData.current.temp;
+                // Convert today's temperature from Kelvin to Fahrenheit (rounded to one decimal point)
+                todayTemp = ((todayTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
+                //Get Wind Speed
+                todayWind = OneCallData.current.wind_speed;
+                //Get humidity
+                todayHumidity = OneCallData.current.humidity;
+                //Get UV Index
+                uvIndexValue = OneCallData.current.uvi;
+                //Get Weather Icon from API code and image url
+                todayIconCode = OneCallData.current.weather.icon;
+                todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + "@2x.png";
+            //Isolate forecast data from "daily" section of One Call API response
+        });
+            
             
         //Define UV Index URL using lat and long
         var UVindexURL = "https://api.openweathermap.org/data/2.5/uvi?&appid=" + APIKey + "&lat=" + latitude + "&lon=" + longitude;
