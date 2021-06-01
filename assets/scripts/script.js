@@ -1,5 +1,5 @@
 //API Key from Open Weather API
-var APIkey = "cf589712e83c2302d49522e11784d1ab";
+var APIKey = "cf589712e83c2302d49522e11784d1ab";
 
 //global variables for Today Card
 var City = "";
@@ -103,11 +103,11 @@ function displayTodayWeather() {
     var todayHeader = $("<h4>").text(City + " " + todayDate.toString());
     var weatherIcon = $("<img>").attr('src', todayIconUrl);
 
-    var TemperatureToday = $("<p>").text("Temp " + todayTemp + "ºF");
-    var WindSpeedToday = $("<p>").text("Wind Speed: " + windSpeed + " MPH");
-    var HumidityToday = $("<p>").text("Humidity: " + humidityValue + " %");
+    var TemperatureToday = $("<p>").text("Temp: " + todayTemp + "ºF");
+    var WindSpeedToday = $("<p>").text("Wind Speed: " + todayWind + " MPH");
+    var HumidityToday = $("<p>").text("Humidity: " + todayHumidity + " %");
     var UVItoday = $("<p>").text("UV Index: ");
-    var UVItodayBGformat = $("<span>").text(UVindex).css("background-color", UVIBackgroundColor(UVindex)).addClass("text-white"); 
+    var UVItodayBGformat = $("<span>").text(UVindex).css("background-color", UVIBackgroundColor(UVindex)).addClass("badge text-white"); 
     //order string elements in card
     todayHeader.append(weatherIcon);
     todayCard.append(todayHeader);
@@ -121,7 +121,18 @@ function displayTodayWeather() {
 }
 
 function UVIBackgroundColor(UVindex) {
-    
+    var UVIvalue = parseFloat(UVindex);
+    var UVcolor = "";
+    if (UVIvalue <= 3) {
+        UVcolor = "#167e50";
+      } else if ((UVIvalue > 3) && (UVIvalue <= 6)) {
+        UVcolor = "#7e7c16";
+      } else if ((UVIvalue > 6) && (UVIvalue <= 10)) {
+        UVcolor = "#7e5416";
+      } else if (UVIvalue > 10) {
+        UVcolor = "#7e1616";
+      }
+      return UVcolor;
 }
 
 //Function to search info for a city
@@ -148,7 +159,7 @@ function searchCity(cityName){
             latitude = APIdata.coord.lat;
             longitude = APIdata.coord.lon;
         //Define One Call URL using lat and long
-        var OneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=minutely,hourly,alerts&appid=" + APIkey;
+        var OneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=minutely,hourly,alerts&appid=" + APIKey;
         //Perform an asynchronous HTTP (ajax) request for One Call API
         $.ajax({
             url: OneCallURL,
@@ -174,22 +185,22 @@ function searchCity(cityName){
                 //Get UV Index
                 UVindex = OneCallData.current.uvi;
                 //Get Weather Icon from API code and image url
-                todayIconCode = OneCallData.current.weather.icon;
-                todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + "@2x.png";
+                todayIconCode = OneCallData.current.weather[0].icon;
+                todayIconUrl = "http://openweathermap.org/img/wn/" + todayIconCode + ".png";
                 //All today's weather info is identified so call the display function
             displayTodayWeather();
             //Isolate forecast data from "daily" section of One Call API response
-            addCardDeckHeader();
-            for (var i=0; i < 5; i++) {
-                forecastDate = moment.unix(OneCallData.daily[i].dt).format('l');
-                var forecastTempKelvin = OneCallData.daily[i].temp.day;
-                forecastTemp =  ((forecastTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
-                forecastWind = OneCallData.daily[i].wind_speed;
-                forecastHumidity = OneCallData.daily[i].humidity;
-                forecasticoncode = OneCallData.daily[i].weather[0].icon;
-                forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
-                displayDayForeCast()
-            } 
+            // addCardDeckHeader();
+            // for (var i=0; i < 5; i++) {
+            //     forecastDate = moment.unix(OneCallData.daily[i].dt).format('l');
+            //     var forecastTempKelvin = OneCallData.daily[i].temp.day;
+            //     forecastTemp =  ((forecastTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
+            //     forecastWind = OneCallData.daily[i].wind_speed;
+            //     forecastHumidity = OneCallData.daily[i].humidity;
+            //     forecasticoncode = OneCallData.daily[i].weather[0].icon;
+            //     forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
+            //     displayDayForeCast()
+            // } 
         });
     });
 }
