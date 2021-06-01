@@ -24,20 +24,21 @@ var latitude = "";
 var longitude = "";
 var searchedCities = [];
 
-//Pull city search history from local storage
-var localStorageCities = JSON.parse(localStorage.getItem("city-search-history"));
-if (localStorageCities !== null) {
-    localStorageCities.forEach(function(City) {City.toUpperCase();});
-    searchedCities = localStorageCities;  
-}
+
 
 //Identify current searched city from array and run search function
 $(document).ready(function(){
-    showCityList(searchedCities);
+    //Pull city search history from local storage
+    var localStorageCities = JSON.parse(localStorage.getItem("city-search-history"));
     if (localStorageCities !== null) {
-      var currentCity = searchedCities[0];
-      searchCity(currentCity);
+        localStorageCities.forEach(function(City) {City.toUpperCase();});
+        searchedCities = localStorageCities ;  
+        var currentCity = searchedCities[0];
+        console.log(searchedCities);
+        searchCity(currentCity);
+        showCityList(searchedCities);
     }
+    
 });
 
 //Function response to Search Button click
@@ -116,13 +117,16 @@ function displayTodayWeather() {
     todayCard.append(HumidityToday);
     UVItoday.append(UVItodayBGformat);
     todayCard.append(UVItoday);
-    //send card to HTML
+    //send card with ordered strings to HTML
     $("#current-weather").append(todayCard);
 }
 
+//Function to customize color of UV Index badge based on value
 function UVIBackgroundColor(UVindex) {
+    //convert UV index from string to number
     var UVIvalue = parseFloat(UVindex);
     var UVcolor = "";
+    //define color based on UV index value
     if (UVIvalue <= 3) {
         UVcolor = "#167e50";
       } else if ((UVIvalue > 3) && (UVIvalue <= 6)) {
@@ -134,6 +138,17 @@ function UVIBackgroundColor(UVindex) {
       }
       return UVcolor;
 }
+
+//Function to display list of searched cities
+function showCityList(searchedCities) {
+    $("#city-list").removeClass("hide");
+    var count = 0;
+    count = searchedCities.length;
+    for (var i=0; i < count; i++) {
+      $("#city-list").append(`<a href="#" class="list-group-item btn-block" style="text-decoration: none; color: black; background-color: #b7b7b7; border: none; text-align: center;">`
+      + searchedCities[i] + `</a>`);
+    }
+  }
 
 //Function to search info for a city
 function searchCity(cityName){
@@ -190,17 +205,17 @@ function searchCity(cityName){
                 //All today's weather info is identified so call the display function
             displayTodayWeather();
             //Isolate forecast data from "daily" section of One Call API response
-            // addCardDeckHeader();
-            // for (var i=0; i < 5; i++) {
-            //     forecastDate = moment.unix(OneCallData.daily[i].dt).format('l');
-            //     var forecastTempKelvin = OneCallData.daily[i].temp.day;
-            //     forecastTemp =  ((forecastTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
-            //     forecastWind = OneCallData.daily[i].wind_speed;
-            //     forecastHumidity = OneCallData.daily[i].humidity;
-            //     forecasticoncode = OneCallData.daily[i].weather[0].icon;
-            //     forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
-            //     displayDayForeCast()
-            // } 
+            addCardDeckHeader();
+            for (var i=0; i < 5; i++) {
+                forecastDate = moment.unix(OneCallData.daily[i].dt).format('l');
+                var forecastTempKelvin = OneCallData.daily[i].temp.day;
+                forecastTemp =  ((forecastTempKelvin - 273.15) * 1.80 + 32).toFixed(1);
+                forecastWind = OneCallData.daily[i].wind_speed;
+                forecastHumidity = OneCallData.daily[i].humidity;
+                forecasticoncode = OneCallData.daily[i].weather[0].icon;
+                forecasticonurl = "http://openweathermap.org/img/wn/" + forecasticoncode + "@2x.png";
+                displayDayForeCast()
+            } 
         });
     });
 }
